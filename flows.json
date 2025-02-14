@@ -1,0 +1,435 @@
+[
+    {
+        "id": "eb96fd834f2c1330",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2b0a868b.2be44a",
+        "type": "mqtt in",
+        "z": "eb96fd834f2c1330",
+        "name": "Team_7",
+        "topic": "cma/echo/1163f0/uplink",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "dcae0976.d5cee8",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "6e06e75f.6945d8",
+                "fc4ba1d9cbc198ee"
+            ]
+        ]
+    },
+    {
+        "id": "4684249f.dbb5fc",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cb565708.b05e28",
+        "type": "mqtt out",
+        "z": "eb96fd834f2c1330",
+        "name": "Team_7",
+        "topic": "cma/echo/1163f0/downlink",
+        "qos": "0",
+        "retain": "false",
+        "broker": "dcae0976.d5cee8",
+        "x": 640,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "3bba4413.7aeabc",
+        "type": "function",
+        "z": "eb96fd834f2c1330",
+        "name": "Generate Downlink",
+        "func": "\nreturn {\n    topic: \"cma/echo/1163f0/downlink\",\n    payload: { \n        \"confirmed\": false, \n        \"devEUI\": \"0016c001f01163f0\", \n        \"fPort\": 111, \n        \"appPayload\": \"TEST\",\n        \"transactionId\": \"fb85ce63-aa05-4d13-9668-743ddeb6fe24\" \n    }\n};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 450,
+        "y": 360,
+        "wires": [
+            [
+                "cb565708.b05e28"
+            ]
+        ]
+    },
+    {
+        "id": "2376f3a8.11ba8c",
+        "type": "inject",
+        "z": "eb96fd834f2c1330",
+        "name": "Downlink",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Downlink scheduled",
+        "payloadType": "str",
+        "x": 250,
+        "y": 360,
+        "wires": [
+            [
+                "3bba4413.7aeabc",
+                "58f8564d.8e1d48"
+            ]
+        ]
+    },
+    {
+        "id": "58f8564d.8e1d48",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 450,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "36acc24a.ffebae",
+        "type": "function",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "func": "if(msg.payload && msg.payload.frmPayload){\n    let base64string=msg.payload.frmPayload;\n\n    try{\n        let decodeValue=Buffer.from(base64string,'base64');\n        msg.payload=decodeValue;\n    }catch(error){\n        msg.payload=\"erreur de decodage\";\n    }\n    \n} else {\n    msg.payload = \"frmPayload not found\";\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 260,
+        "wires": [
+            [
+                "4684249f.dbb5fc"
+            ]
+        ]
+    },
+    {
+        "id": "6e06e75f.6945d8",
+        "type": "json",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "feaefa47.e344d8",
+                "36acc24a.ffebae",
+                "9ef1255e865e9a05"
+            ]
+        ]
+    },
+    {
+        "id": "feaefa47.e344d8",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7349e6eec823b251",
+        "type": "influxdb out",
+        "z": "eb96fd834f2c1330",
+        "influxdb": "a27cc0208fd519bf",
+        "name": "influxdb ",
+        "measurement": "test",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univ cote azur",
+        "bucket": "test",
+        "x": 880,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "728294107c8e0b0c",
+        "type": "inject",
+        "z": "eb96fd834f2c1330",
+        "name": "test gene",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 100,
+        "y": 100,
+        "wires": [
+            [
+                "a018d3fa6dd18147"
+            ]
+        ]
+    },
+    {
+        "id": "a018d3fa6dd18147",
+        "type": "change",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "temp",
+                "pt": "global",
+                "to": "50*$random()",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "49860f0e4b60e212"
+            ]
+        ]
+    },
+    {
+        "id": "49860f0e4b60e212",
+        "type": "function",
+        "z": "eb96fd834f2c1330",
+        "name": "function 2",
+        "func": "var temp=global.get('temp')\nmsg.payload = {\n\n  temperature: temp,\n  timestamp: Date.now()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 120,
+        "wires": [
+            [
+                "7349e6eec823b251",
+                "b931189441cd9c75"
+            ]
+        ]
+    },
+    {
+        "id": "fc4ba1d9cbc198ee",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9ef1255e865e9a05",
+        "type": "function",
+        "z": "eb96fd834f2c1330",
+        "name": "function 5",
+        "func": "// Vérifie si le payload est une chaîne encodée en base64 et la décode \ntry {\n    // Décodage base64\n    msg.payload = Buffer.from(msg.payload.frmPayload, 'base64').toString('utf-8');\n} catch (error) {\n    msg.payload = \"Erreur : Données non valides\";\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 300,
+        "wires": [
+            [
+                "adbb2698ffb8289e",
+                "35768477b87d5d6e"
+            ]
+        ]
+    },
+    {
+        "id": "adbb2698ffb8289e",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "debug 47",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "35768477b87d5d6e",
+        "type": "function",
+        "z": "eb96fd834f2c1330",
+        "name": "function 6",
+        "func": "//var time=new Date().toLocaleTimeString();\nif (typeof msg.payload === \"string\" && msg.payload.startsWith(\"lat\")) {\n    var data1=msg.payload;\n    var data2=data1.split(\"t:\");\n    var data3=data2[1].split(\"l\");\n    var data4=data3[1].split(\"g:\")\n    var payloadout={\n        \"latf\":parseFloat(data3[0]),\n        \"longf\":parseFloat(data4[1])};\n    var msgout={payload:payloadout}\n    return msgout;\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 480,
+        "wires": [
+            [
+                "7c4949e4d0496b40",
+                "60ad9c139b8906d5"
+            ]
+        ]
+    },
+    {
+        "id": "b931189441cd9c75",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "60ad9c139b8906d5",
+        "type": "influxdb out",
+        "z": "eb96fd834f2c1330",
+        "influxdb": "a27cc0208fd519bf",
+        "name": "influxdb ",
+        "measurement": "gnss",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univ cote azur",
+        "bucket": "gnss",
+        "x": 960,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "7c4949e4d0496b40",
+        "type": "debug",
+        "z": "eb96fd834f2c1330",
+        "name": "debug 48",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "dcae0976.d5cee8",
+        "type": "mqtt-broker",
+        "name": "team_7",
+        "broker": "mqtt://unica.ovh",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a27cc0208fd519bf",
+        "type": "influxdb",
+        "hostname": "100.127.125.86",
+        "port": "8086",
+        "protocol": "http",
+        "database": "test",
+        "name": "influxdb",
+        "usetls": true,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://localhost:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    }
+]
