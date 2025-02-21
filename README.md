@@ -17,6 +17,3 @@
     Suivi en temps réel d’un véhicule/ vélo
     Localisation d’objets ou de personnes
     Analyse des déplacements et historique des trajets
-
-    ![image](https://github.com/user-attachments/assets/46b56dc1-a1f9-43ab-8135-f677a8f51ce0)
-
