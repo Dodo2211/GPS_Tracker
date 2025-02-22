@@ -1,12 +1,3 @@
-/**
-   @brief This example demonstrates how to use use the GNSS and echostar network for tracking application
-   This code can also be used to test Echostar AT commands, GNSS UART and I2C sensors (BME680 and KX025)
-   The terminal try to get a GNSS fix and send to Echo network its position + sensing information
-
-   @author mtnguyen, fferrero
-   @version 1.0.5 for Echo 7 board version
-
-*/
 
 #define DATA_INTERVAL 5000 //ms
 #define ADC_AREF 3.3f
